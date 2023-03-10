@@ -70,14 +70,14 @@ async def fetch_contests(sched, bot: discord.Bot):
 			pass
 
 async def notify_users(sched, bot: discord.Bot, user_id: discord.User.id, div, contest_id, start_time: int, time_in_advance):
-	print(f'Notify {user_id} for contest {contest_id}')
-	with open(f'{os.path.dirname(__file__)}/dm_channels.json', 'r') as f:
+	print("Notify " + str(user_id) + " for contest "str(contest_id))
+	with open(str(os.path.dirname(__file__)) + "/dm_channels.json", 'r') as f:
 		dm_channels = json.load(f)
 	if not user_id in dm_channels.keys():
 		user = bot.get_user(user_id)
 		new_dm_channel = await asyncio.gather(bot.create_dm(user))
 		dm_channels[str(user_id)] = str(new_dm_channel[0].id)
-		with open(f'{os.path.dirname(__file__)}/dm_channels.json', 'w') as f:
+		with open(str(os.path.dirname(__file__)) + "/dm_channels.json", 'w') as f:
 			f.write(json.dumps(dm_channels))
 	if time_in_advance == "1d":
 		await bot.get_channel(int(dm_channels[str(user_id)])).send("New Div. " + str(div) + "contest in 1 day on " + str(datetime.fromtimestamp(start_time)) + "\n Regestrationlink: https://codeforces.com/contestRegistration/" + str(contest_id)")
@@ -91,10 +91,10 @@ async def subscribe_cf(ctx, div: Option(str, "Choose which div to subscribe to")
 	if div in "1234":
 		with open(str(os.path.dirname(__file__)) + "/subscription{div}.csv", 'r+') as f:
 			if not str(ctx.author.id) in f.read():
-				f.write(f'{ctx.author.id},')
-				await ctx.respond(f'You have been added to div {div}')
+				f.write(str(ctx.author.id) + ',')
+				await ctx.respond("You have been added to div " + str(div))
 			else:
-				await ctx.respond(f'You are already subscribed to div {div}')
+				await ctx.respond("You are already subscribed to div " + str(div))
 	else:
 		await ctx.respond("Only 1, 2, 3 and 4 are valid divs")
 
