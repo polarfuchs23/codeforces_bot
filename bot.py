@@ -25,8 +25,8 @@ async def fetch_contests(sched, bot: discord.Bot):
 				entry["name"] += "Div. 1Div. 2Div. 3Div. 4"
 			if "Div. 1" in entry["name"]:
 				print("New Div 1 contest: " + entry["name"] + "id: " + str(entry["id"]))
-				if os.path.isfile(f'{os.path.dirname(__file__)}/subscription1.csv'):
-					with open(f'{os.path.dirname(__file__)}/subscription1.csv', 'r') as f:
+				if os.path.isfile(str(os.path.dirname(__file__)) + "/subscription1.csv"):
+					with open(str(os.path.dirname(__file__)) + "/subscription1.csv", 'r') as f:
 						user_ids = list(map(int, f.read().split(',')[:-1]))
 					for user_id in user_ids:
 						if not user_id in scheduled:
@@ -36,8 +36,8 @@ async def fetch_contests(sched, bot: discord.Bot):
 							scheduled.append(user_id)
 			if "Div. 2" in entry["name"]:
 				print("New Div 2 contest: " + entry["name"] + "id: " + str(entry["id"]))
-				if os.path.isfile(f'{os.path.dirname(__file__)}/subscription2.csv'):
-					with open(f'{os.path.dirname(__file__)}/subscription2.csv', 'r') as f:
+				if os.path.isfile(str(os.path.dirname(__file__)) + "/subscription2.csv"):
+					with open(str(os.path.dirname(__file__)) + "/subscription2.csv", 'r') as f:
 						user_ids = list(map(int, f.read().split(',')[:-1]))
 					for user_id in user_ids:
 						if not user_id in scheduled:
@@ -47,8 +47,8 @@ async def fetch_contests(sched, bot: discord.Bot):
 							scheduled.append(user_id)
 			if "Div. 3" in entry["name"]:
 				print("New Div 3 contest: " + entry["name"] + "id: " + str(entry["id"]))
-				if os.path.isfile(f'{os.path.dirname(__file__)}/subscription3.csv'):
-					with open(f'{os.path.dirname(__file__)}/subscription3.csv', 'r') as f:
+				if os.path.isfile(str(os.path.dirname(__file__)) + "/subscription3.csv"):
+					with open(str(os.path.dirname(__file__)) + "/subscription3.csv", 'r') as f:
 						user_ids = list(map(int, f.read().split(',')[:-1]))
 					for user_id in user_ids:
 						if not user_id in scheduled:
@@ -58,8 +58,8 @@ async def fetch_contests(sched, bot: discord.Bot):
 							scheduled.append(user_id)
 			if "Div. 4" in entry["name"]:
 				print("New Div 4 contest: " + entry["name"] + "id: " + str(entry["id"]))
-				if os.path.isfile(f'{os.path.dirname(__file__)}/subscription4.csv'):
-					with open(f'{os.path.dirname(__file__)}/subscription4.csv', 'r') as f:
+				if os.path.isfile(str(os.path.dirname(__file__)) + "/subscription4.csv"):
+					with open(str(os.path.dirname(__file__)) + "/subscription4.csv", 'r') as f:
 						user_ids = list(map(int, f.read().split(',')[:-1]))
 					for user_id in user_ids:
 						if not user_id in scheduled:
@@ -80,19 +80,16 @@ async def notify_users(sched, bot: discord.Bot, user_id: discord.User.id, div, c
 		with open(f'{os.path.dirname(__file__)}/dm_channels.json', 'w') as f:
 			f.write(json.dumps(dm_channels))
 	if time_in_advance == "1d":
-		await bot.get_channel(int(dm_channels[str(user_id)])).send(f'New Div. {div} contest in 1 day on {datetime.fromtimestamp(start_time)}\n'
-															   +f'Regestrationlink: https://codeforces.com/contestRegistration/{contest_id}')
+		await bot.get_channel(int(dm_channels[str(user_id)])).send("New Div. " + str(div) + "contest in 1 day on " + str(datetime.fromtimestamp(start_time)) + "\n Regestrationlink: https://codeforces.com/contestRegistration/" + str(contest_id)")
 	elif time_in_advance == "1h":
-		await bot.get_channel(int(dm_channels[str(user_id)])).send(f'Div. {div} contest in 1 hour\n'
-																	 +f'Regestrationlink: https://codeforces.com/contestRegistration/{contest_id}')
+		await bot.get_channel(int(dm_channels[str(user_id)])).send("Div. " + str(div) + "contest in 1 hour\n Regestrationlink: https://codeforces.com/contestRegistration/" + str(contest_id)")
 	elif time_in_advance == "10m":
-		await bot.fetch_channel(int(dm_channels[str(user_id)])).send(f'Div. {div} contest starts in 10 min. Last chance for registration:\n'
-																	 +f'https://codeforces.com/contestRegistration/{contest_id}')
+		await bot.fetch_channel(int(dm_channels[str(user_id)])).send("Div. " + str(div) + "contest starts in 10min.\n Last chance for regestration: https://codeforces.com/contestRegistration/" + str(contest_id)")
 
 @bot.slash_command(name = "subscribe_cf", description = "Subscribe to the codeforces contest notifications")
 async def subscribe_cf(ctx, div: Option(str, "Choose which div to subscribe to")):
 	if div in "1234":
-		with open(f'{os.path.dirname(__file__)}/subscription{div}.csv', 'r+') as f:
+		with open(str(os.path.dirname(__file__)) + "/subscription{div}.csv", 'r+') as f:
 			if not str(ctx.author.id) in f.read():
 				f.write(f'{ctx.author.id},')
 				await ctx.respond(f'You have been added to div {div}')
@@ -103,7 +100,7 @@ async def subscribe_cf(ctx, div: Option(str, "Choose which div to subscribe to")
 
 @bot.event
 async def on_ready():
-	print(f'Logged in as {bot.user}')
+	print("Logged in as " + str(bot.user))
 	sched = AsyncIOScheduler()
 	sched.add_job(fetch_contests, 'cron', day='*', args=[sched, bot])
 	sched.start()
