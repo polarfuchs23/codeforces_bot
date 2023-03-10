@@ -105,7 +105,7 @@ async def subscribe_cf(ctx, div: Option(str, "Choose which div to subscribe to")
 async def on_ready():
 	print(f'Logged in as {bot.user}')
 	sched = AsyncIOScheduler()
-	sched.add_job(fetch_contests, args=[sched, bot])
+	sched.add_job(fetch_contests, 'cron', day='*', args=[sched, bot])
 	sched.start()
 
 load_dotenv()
