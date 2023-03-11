@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 touch dm_channels.json
 touch subscription1.csv
 touch subscription2.csv
